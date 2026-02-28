@@ -6,6 +6,7 @@ import './index.css'
 
 export default function App() {
   const [show, setShow] = useState(true)
+  const [clicked, setClicked] = useState(false)
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-black">
@@ -18,7 +19,11 @@ export default function App() {
               <p className="text-zinc-400 text-sm mb-3">Welcome to DramaBox Web! Just so you know, all the drama content you're enjoying here is served through our awesome API. Feel free to explore and binge-watch to your heart's content! 🍿✨</p>
               <p className="text-zinc-500 text-xs mb-4">Powered by</p>
               <a href="https://reelapi.it.com/" target="_blank" rel="noopener noreferrer" className="text-red-400 hover:text-red-300 underline font-medium">reelapi.it.com</a>
-              <button onClick={() => setShow(false)} className="mt-5 w-full btn-primary">Let's Go!</button>
+              {clicked ? (
+                <button onClick={() => setShow(false)} className="mt-5 w-full btn-primary">Close</button>
+              ) : (
+                <button onClick={() => { window.open('https://reelapi.it.com/', '_blank'); setClicked(true); }} className="mt-5 w-full btn-primary">Click to Continue</button>
+              )}
             </div>
           </div>
         )}
