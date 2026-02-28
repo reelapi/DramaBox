@@ -24,6 +24,7 @@ const Watch = () => {
   const [watchData, setWatchData] = useState<WatchData | null>(null);
   const [loading, setLoading] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const lang = 'en';
 
   useEffect(() => {
     if (!id) return;
