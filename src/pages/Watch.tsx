@@ -19,7 +19,7 @@ interface WatchData {
 const Watch = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [currentChapter, setCurrentChapter] = useState(1);
+  const [currentChapter, setCurrentChapter] = useState(0);
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [watchData, setWatchData] = useState<WatchData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -63,19 +63,19 @@ const Watch = () => {
   };
 
   const handlePrevious = () => {
-    if (currentChapter > 1) {
+    if (currentChapter > 0) {
       setCurrentChapter(currentChapter - 1);
     }
   };
 
   const handleNext = () => {
-    if (currentChapter < chapters.length) {
+    if (currentChapter < chapters.length - 1) {
       setCurrentChapter(currentChapter + 1);
     }
   };
 
   const handleVideoEnded = () => {
-    if (currentChapter < chapters.length) {
+    if (currentChapter < chapters.length - 1) {
       setCurrentChapter(currentChapter + 1);
     }
   };
@@ -124,7 +124,7 @@ const Watch = () => {
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-10">
             <div className="text-center">
               <div className="animate-spin w-8 h-8 border-2 border-red-500 border-t-transparent rounded-full mx-auto mb-2"></div>
-              <p className="text-sm text-white">Loading episode {currentChapter}...</p>
+              <p className="text-sm text-white">Loading episode {currentChapter + 1}...</p>
             </div>
           </div>
         )}
@@ -149,7 +149,7 @@ const Watch = () => {
             <h2 className="text-lg font-bold mb-2">{watchData.bookName}</h2>
             <div className="flex items-center gap-3 mb-3">
               <span className="text-sm text-zinc-400">
-                Episode {currentChapter} of {chapters.length}
+                Episode {currentChapter + 1} of {chapters.length}
               </span>
             </div>
             {watchData.introduction && (
@@ -163,7 +163,7 @@ const Watch = () => {
           <div className="flex gap-3">
             <button
               onClick={handlePrevious}
-              disabled={currentChapter <= 1 || isTransitioning}
+              disabled={currentChapter <= 0 || isTransitioning}
               className="flex-1 py-3 bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg flex items-center justify-center gap-2 transition-colors"
             >
               <ChevronLeft size={18} />
@@ -171,7 +171,7 @@ const Watch = () => {
             </button>
             <button
               onClick={handleNext}
-              disabled={currentChapter >= chapters.length || isTransitioning}
+              disabled={currentChapter >= chapters.length - 1 || isTransitioning}
               className="flex-1 py-3 bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg flex items-center justify-center gap-2 transition-colors text-white font-medium"
             >
               <span>Selanjutnya</span>
@@ -184,19 +184,18 @@ const Watch = () => {
             <h3 className="font-semibold mb-3">All Episodes</h3>
             <div className="grid grid-cols-6 gap-2 max-h-64 overflow-y-auto">
               {chapters.map((chapter) => {
-                const episodeNum = chapter.chapterIndex + 1;
                 return (
                   <button
                     key={chapter.chapterId}
-                    onClick={() => handleChapterChange(episodeNum)}
+                    onClick={() => handleChapterChange(chapter.chapterIndex)}
                     disabled={isTransitioning}
                     className={`aspect-square rounded-lg text-sm font-medium transition-all ${
-                      currentChapter === episodeNum
+                      currentChapter === chapter.chapterIndex
                         ? 'bg-red-500 text-white scale-105'
                         : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
                     } ${isTransitioning ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
-                    {episodeNum}
+                    {chapter.chapterIndex + 1}
                   </button>
                 );
               })}
