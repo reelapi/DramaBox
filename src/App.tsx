@@ -14,9 +14,11 @@ export default function App() {
         {show && (
           <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
             <div className="bg-zinc-900 rounded-xl p-6 max-w-sm w-full text-center">
-              <p className="text-white mb-2 font-semibold">API Powered by</p>
-              <a href="https://reelapi.it.com/" target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:text-purple-300 underline">reelapi.it.com</a>
-              <button onClick={() => setShow(false)} className="mt-5 w-full bg-purple-600 text-white py-2.5 rounded-lg font-medium hover:bg-purple-500 transition-colors">OK</button>
+              <p className="text-white mb-1 font-semibold text-lg">Hey there! 👋</p>
+              <p className="text-zinc-400 text-sm mb-3">Welcome to DramaBox Web! Just so you know, all the drama content you're enjoying here is served through our awesome API. Feel free to explore and binge-watch to your heart's content! 🍿✨</p>
+              <p className="text-zinc-500 text-xs mb-4">Powered by</p>
+              <a href="https://reelapi.it.com/" target="_blank" rel="noopener noreferrer" className="text-red-400 hover:text-red-300 underline font-medium">reelapi.it.com</a>
+              <button onClick={() => setShow(false)} className="mt-5 w-full btn-primary">Let's Go!</button>
             </div>
           </div>
         )}
