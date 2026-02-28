@@ -9,10 +9,17 @@ interface Chapter {
   isPay: number;
 }
 
+interface Quality {
+  quality: number;
+  videoPath: string;
+  isDefault: number;
+}
+
 interface WatchData {
   bookName: string;
   bookCover: string;
   videoUrl: string;
+  qualities: Quality[];
   introduction: string;
 }
 
@@ -24,7 +31,11 @@ const Watch = () => {
   const [watchData, setWatchData] = useState<WatchData | null>(null);
   const [loading, setLoading] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [selectedQuality, setSelectedQuality] = useState<number | null>(null);
+  const [showQuality, setShowQuality] = useState(false);
   const lang = 'en';
+
+  const videoSrc = watchData?.qualities?.find(q => q.quality === selectedQuality)?.videoPath || watchData?.videoUrl;
 
   useEffect(() => {
     if (!id) return;
@@ -46,6 +57,8 @@ const Watch = () => {
         const watchDataResponse = await watchResponse.json();
         if (watchDataResponse.success) {
           setWatchData(watchDataResponse.data);
+          const def = watchDataResponse.data.qualities?.find((q: Quality) => q.isDefault)?.quality || 720;
+          if (!selectedQuality) setSelectedQuality(def);
         }
       } catch (error) {
         console.error('Failed to fetch watch data:', error);
@@ -131,8 +144,8 @@ const Watch = () => {
         
         <div className="relative bg-black">
           <video
-            key={watchData.videoUrl}
-            src={watchData.videoUrl}
+            key={videoSrc}
+            src={videoSrc}
             poster={watchData.bookCover}
             controls
             autoPlay
@@ -140,6 +153,18 @@ const Watch = () => {
             onEnded={handleVideoEnded}
             className="w-full aspect-[9/16] object-contain bg-black"
           />
+          {watchData.qualities?.length > 0 && (
+            <div className="absolute top-3 right-3 z-20">
+              <button onClick={() => setShowQuality(!showQuality)} className="bg-black/60 text-white text-xs px-2 py-1 rounded font-medium">{selectedQuality}p</button>
+              {showQuality && (
+                <div className="absolute right-0 mt-1 bg-zinc-900 rounded-lg overflow-hidden shadow-lg">
+                  {watchData.qualities.sort((a,b) => b.quality - a.quality).map(q => (
+                    <button key={q.quality} onClick={() => { setSelectedQuality(q.quality); setShowQuality(false); }} className={`block w-full px-4 py-2 text-sm text-left ${selectedQuality === q.quality ? 'bg-red-500 text-white' : 'text-zinc-300 hover:bg-zinc-800'}`}>{q.quality}p</button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Content */}
